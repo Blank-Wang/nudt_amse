@@ -1,5 +1,7 @@
 # nudt_amse
+
 Classification and Similarity Analysis of Whale Calls
+
 This MATLAB code mainly uses convolutional neural network (CNN) to classify whale calls and do similarity analysis. In addition, the similarity analysis also used SPSS software and Phylip software.
 Phylip software download address: http://evolution.gs.washington.edu/phylip/
 
