@@ -40,7 +40,6 @@ Copy the simi_matrix.mat to the folder ‘Similarity_Illustration’, then execu
 
 (2) Based on the simi_matrix.mat , use SPSS to do the further similarity analyzation.
 Execute the procedure of ‘Analyze-classify-Hierarchical cluster’ and choose the Square Euclidean to describe the similarity among the samples. Our experiment result is showed as Tabel 1.
-Table 1
  
 Meanwhile, you can get a Square Euclidean distance matrix A.
 
