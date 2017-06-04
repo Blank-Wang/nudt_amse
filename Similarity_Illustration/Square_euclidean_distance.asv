@@ -1,0 +1,3 @@
+load probability16;
+distance_matrix = zeros(16);
+n = size(probability16,2);
