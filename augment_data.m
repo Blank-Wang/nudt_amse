@@ -1,0 +1,4 @@
+augment_4class_data_by_adjust_grayscale
+augment_16class_data_by_adjust_grayscale
+merge_initial_and_augment_data_for_class4
+merge_initial_and_augment_data_for_class16
