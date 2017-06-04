@@ -1,0 +1,157 @@
+clear all
+clc
+close all
+
+path_train = 'E:\Yuehao\mixture4\mixture_classes4_train\';
+path_test = 'E:\Yuehao\mixture4\mixture_classes4_test\';
+
+ext = '.tif';
+%%Initialize data space
+%%amount of train samples = 9000*64
+%%amount of test samples =3000*64
+
+train_xn=zeros(32,32,9000*64);
+train_yn=zeros(4,    9000*64);
+test_xn=zeros(32,32,3000*64);
+test_yn=zeros(4,    3000*64);
+
+%%read train images of each class respectively
+%%2250 samples of class one
+n=1;
+  for i = 1:2250 
+     num= num2str(i); 
+     train_x=im2double(imread(strcat(path_train,'1','\',num,ext))); 
+    for j=1:8
+      for k=1:8
+        train_xn(:,:,n)=train_x((j:8:256),(k:8:256),1);
+        n=n+1;
+      end
+    end       
+  end
+%%2250 samples of class two
+for i = 1:2250 
+     num= num2str(i); 
+     train_x=im2double(imread(strcat(path_train,'2','\',num,ext))); 
+    for j=1:8
+      for k=1:8
+        train_xn(:,:,n)=train_x((j:8:256),(k:8:256),1);
+        n=n+1;
+      end
+    end 
+ end
+%%2250 samples of class three
+for i = 1:2250 
+     num= num2str(i); 
+     train_x=im2double(imread(strcat(path_train,'3','\',num,ext))); 
+    for j=1:8
+      for k=1:8
+        train_xn(:,:,n)=train_x((j:8:256),(k:8:256),1);
+        n=n+1;
+      end
+    end 
+end
+%%2250 samples of class four
+for i = 1:2250 
+     num= num2str(i); 
+     train_x=im2double(imread(strcat(path_train,'4','\',num,ext))); 
+    for j=1:8
+      for k=1:8
+        train_xn(:,:,n)=train_x((j:8:256),(k:8:256),1);
+        n=n+1;
+      end
+    end 
+end
+
+%%read train images of each class respectively
+
+m=1;
+  for i = 1:725 
+     num= num2str(i); 
+     test_x=im2double(imread(strcat(path_test,'1','\',num,ext))); 
+    for j=1:8
+      for k=1:8
+        test_xn(:,:,m)=test_x((j:8:256),(k:8:256),1);
+        m=m+1;
+      end
+    end       
+  end
+%%class two 
+for i = 1:725 
+     num= num2str(i); 
+     test_x=im2double(imread(strcat(path_test,'2','\',num,ext))); 
+    for j=1:8
+      for k=1:8
+        test_xn(:,:,m)=test_x((j:8:256),(k:8:256),1);
+        m=m+1;
+      end
+    end       
+  end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%read test data
+for i = 1:725 
+     num= num2str(i); 
+     test_x=im2double(imread(strcat(path_test,'3','\',num,ext))); 
+    for j=1:8
+      for k=1:8
+        test_xn(:,:,m)=test_x((j:8:256),(k:8:256),1);
+        m=m+1;
+      end
+    end       
+  end
+
+for i = 1:725 
+     num= num2str(i); 
+     test_x=im2double(imread(strcat(path_test,'4','\',num,ext))); 
+    for j=1:8
+      for k=1:8
+        test_xn(:,:,m)=test_x((j:8:256),(k:8:256),1);
+        m=m+1;
+      end
+    end       
+  end
+
+train_yn(1,1:2250*64)=1;
+train_yn(2,2250*64+1:4500*64)=1;
+train_yn(3,4500*64+1:6750*64)=1;
+train_yn(4,6750*64+1:9000*64)=1;
+test_yn(1,1:750*64)=1;
+test_yn(2,750*64+1:1500*64)=1;
+test_yn(3,1500*64+1:2250*64)=1;
+test_yn(4,2250*64+1:3000*64)=1; 
+
+
+rand('state',0)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+cnn.layers = {
+    struct('type', 'i') %input layer
+    struct('type', 'c', 'outputmaps', 6, 'kernelsize', 5) %convolution layer
+    struct('type', 's', 'scale', 2) %sub sampling layer
+    struct('type', 'c', 'outputmaps', 12, 'kernelsize',5) %convolution layer
+    struct('type', 's', 'scale', 2) %subsampling layer
+    
+    };
+
+
+opts.alpha = 1;
+opts.batchsize = 10;
+opts.numepochs = 1;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% cnn = cnnsetup(cnn, train_x, train_y);
+% cnn = cnntrain(cnn, train_x, train_y, opts);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+cnn = cnnsetup(cnn, train_xn, train_yn);
+cnn = cnntrain(cnn, train_xn, train_yn, opts);
+
+[er, bad] = cnntest(cnn, test_xn, test_yn);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  [er, bad] = cnntest(cnn, test_x, test_y);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%plot mean squared error
+figure; plot(cnn.rL);
+ylabel('CNN的均方误差MSE')
+xlabel('训练用数据的Batch数量')
+title(['测试数据的准确率',num2str(1-er)])
+1-er
+% assert(er<0.12, 'Too big error');
+
+save('ori_classes4_3000_mixture_batch10_epoches1.mat','cnn','er','opts','bad');
+saveas(gca,'ori_classes4_3000_mixture_batch10_epoches1','jpg');
