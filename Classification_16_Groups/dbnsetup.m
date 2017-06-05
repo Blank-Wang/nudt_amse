@@ -1,7 +1,7 @@
 function dbn = dbnsetup(dbn, x, opts)
-    %n是单个样本的特征维度，
+   
     n = size(x, 2);
-    %dbn.sizes 是RBM的维度
+    
     dbn.sizes = [n, dbn.sizes];
     %
     for u = 1 : numel(dbn.sizes) - 1
